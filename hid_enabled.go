@@ -11,8 +11,8 @@ package hid
 /*
 #cgo CFLAGS: -I./hidapi/hidapi
 
-#cgo linux CFLAGS: -I./libusb/libusb -DDEFAULT_VISIBILITY="" -DOS_LINUX -D_GNU_SOURCE -DPOLL_NFDS_TYPE=int
-#cgo linux,!android LDFLAGS: -lrt
+#cgo linux CFLAGS: -I./libusb/libusb -DOS_LINUX -D_GNU_SOURCE -DPOLL_NFDS_TYPE=int -DPLATFORM_POSIX
+#cgo linux,!android LDFLAGS: -lrt -pthread -ludev
 #cgo darwin CFLAGS: -DOS_DARWIN
 #cgo darwin LDFLAGS: -framework CoreFoundation -framework IOKit
 #cgo windows CFLAGS: -DOS_WINDOWS
@@ -21,10 +21,12 @@ package hid
 #ifdef OS_LINUX
 	#include <poll.h>
 	#include "os/threads_posix.c"
-	#include "os/poll_posix.c"
+//	#include "os/poll_posix.c"
+  #include "os/events_posix.c"
 
 	#include "os/linux_usbfs.c"
 	#include "os/linux_netlink.c"
+  #include "os/linux_udev.c"
 
 	#include "core.c"
 	#include "descriptor.c"
